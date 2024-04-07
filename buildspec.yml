@@ -7,11 +7,12 @@ env:
 phases:
   install:
     commands:
-    - yum install -y python3
-    - python3 -m pip install --upgrade pip
-    - pip install pylint
-    - pip install coverage
     - yum update -y
+    - yum install -y python3-pip
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install django djangorestframework pylint
     - wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
     - unzip -q sonar-scanner-cli-5.0.1.3006-linux.zip
     - java -version
