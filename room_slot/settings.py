@@ -80,16 +80,12 @@ DATABASES = {
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'roombooking',
-        'USER': 'admin',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'booking',
+        'USER': 'postgres',
         'PASSWORD': 'password',
-        'HOST': 'x23189851-devsecops-dev1.cxqospjboyrv.eu-west-2.rds.amazonaws.com',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset': 'utf8mb4',
-        },
+        'HOST': 'x23189851-devsecops-dev.cxqospjboyrv.eu-west-2.rds.amazonaws.com',
+        'PORT': '5432',
 }
 
 }
@@ -142,3 +138,6 @@ STATICFILES_DIRS = [
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
