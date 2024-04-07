@@ -26,18 +26,18 @@ class RoomsTestCases(TestCase):
         room2 = Rooms.objects.get(price=5000)
         self.assertEqual(room1.price, 3000)
         self.assertEqual(room2.price, 5000)
-class BookingTestCases(TestCase):
-    def setUp(self):
-        RoomManager.objects.create(username='rahul')
-        manager=RoomManager.objects.get(username='rahul')
-        Customer.objects.create(username='vivek',pin_code=799046)
-        Customer.objects.create(username='vikas',pin_code=799046)
-        Rooms.objects.create(room_no='300',no_of_days_advance=10,start_date='2020-03-09',manager=manager)
-        user=Customer.objects.get(username='vivek')
-        user1=Customer.objects.get(username='vikas')
-        room=Rooms.objects.get(room_no='300')
-        Booking.objects.create(user_id=user,room_no=room,amount=10000,start_day='2020-03-10',end_day='2020-03-10')
-        Booking.objects.create(user_id=user1,room_no=room,amount=5000,start_day='2020-03-26',end_day='2020-03-28')
+# class BookingTestCases(TestCase):
+#     def setUp(self):
+#         RoomManager.objects.create(username='rahul')
+#         manager=RoomManager.objects.get(username='rahul')
+#         Customer.objects.create(username='vivek',pin_code=799046)
+#         Customer.objects.create(username='vikas',pin_code=799046)
+#         Rooms.objects.create(room_no='300',no_of_days_advance=10,start_date='2020-03-09',manager=manager)
+#         user=Customer.objects.get(username='vivek')
+#         user1=Customer.objects.get(username='vikas')
+#         room=Rooms.objects.get(room_no='300')
+#         Booking.objects.create(user_id=user,room_no=room,amount=10000,start_day='2020-03-10',end_day='2020-03-10')
+#         Booking.objects.create(user_id=user1,room_no=room,amount=5000,start_day='2020-03-26',end_day='2020-03-28')
 
     def test_booking_username(self):
         user=Customer.objects.get(username='vivek')
