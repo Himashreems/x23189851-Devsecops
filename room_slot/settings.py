@@ -85,7 +85,11 @@ DATABASES = {
         'USER': 'admin',
         'PASSWORD': 'password',
         'HOST': 'x23189851-devsecops-dev1.cxqospjboyrv.eu-west-2.rds.amazonaws.com',
-        'PORT': '3306'
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+        },
 }
 
 }
