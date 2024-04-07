@@ -1,0 +1,36 @@
+version: 0.2
+
+env:
+  variables:
+    PYLINT_THRESHOLD: "9.0"
+
+phases:
+  install:
+    commands:
+    - yum update -y
+    - wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+    - unzip -q sonar-scanner-cli-5.0.1.3006-linux.zip
+    - java -version
+    - export JAVA_HOME=$(pwd)/sonar-scanner-5.0.1.3006-linux/jre
+    - java -version
+    - export PATH=$PATH:$(pwd)/sonar-scanner-5.0.1.3006-linux/bin
+    - sonar-scanner --version
+
+  pre_build:
+    commands:
+    - pip install -r requirements.txt
+    - pylint --exit-zero --output-format=text api booking customer room_manager room_slot > pylint_report.txt
+    - cat pylint_report.txt
+    - PYLINT_SCORE=$(cat pylint_report.txt | grep 'Your code has been rated at' | cut -d' ' -f7 | cut -d'/' -f1)
+    - echo "Pylint Score"  "${PYLINT_SCORE}"
+
+
+  build:
+    commands:
+    - python manage.py test
+    #  Performing the SonarQube Analysis
+    - sonar-scanner  -Dsonar.organization=x23189851   -Dsonar.projectKey=Himashreems_x23189851-Devsecops  -Dsonar.sources=.   -Dsonar.host.url=https://sonarcloud.io -Dsonar.python.pylint.reportPaths=pylint_report.txt
+    - echo "build is success"
+artifacts:
+  files:
+  - '**/*'
