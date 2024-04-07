@@ -24,18 +24,25 @@ phases:
   pre_build:
     commands:
     - pip install -r requirements.txt
-    - pylint --exit-zero --output-format=text api booking customer room_manager room_slot > pylint_report.txt
-    - cat pylint_report.txt
-    - PYLINT_SCORE=$(cat pylint_report.txt | grep 'Your code has been rated at' | cut -d' ' -f7 | cut -d'/' -f1)
-    - echo "Pylint Score"  "${PYLINT_SCORE}"
-
+    # Automatically fix some of the issues detected by pylint
+    - pylint --exit-zero --output-format=text api booking customer room_manager room_slot | tee pylint_report.txt
+    - PYLINT_SCORE=$(awk '/Your code has been rated at/{print $7}' pylint_report.txt | cut -d'/' -f1)
+    - echo "Pylint Score ${PYLINT_SCORE}"
+    # Fail the build if PYLINT_SCORE is below the threshold
+    - |
+      if (( $(echo "$PYLINT_SCORE < $PYLINT_THRESHOLD" | bc -l) )); then
+        echo "Pylint score is below the threshold of $PYLINT_THRESHOLD"
+        exit 1
+      fi
 
   build:
     commands:
-    - python manage.py test
-    #  Performing the SonarQube Analysis
-    - sonar-scanner  -Dsonar.organization=x23189851   -Dsonar.projectKey=Himashreems_x23189851-Devsecops  -Dsonar.sources=.   -Dsonar.host.url=https://sonarcloud.io -Dsonar.python.pylint.reportPaths=pylint_report.txt
-    - echo "build is success"
+    - |
+      # Use --noinput to avoid prompting for input
+      python manage.py test --noinput
+    # Performing the SonarQube Analysis
+    - sonar-scanner -Dsonar.organization=x23189851 -Dsonar.projectKey=Himashreems_x23189851-Devsecops -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.python.pylint.reportPaths=pylint_report.txt
+
 artifacts:
   files:
   - '**/*'
