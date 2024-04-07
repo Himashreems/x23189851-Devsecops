@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from .models import Rooms, Booking
 from login.models import Customer, RoomManager
 from django.urls import reverse
@@ -6,14 +6,14 @@ from django.urls import reverse
 class RoomsTestCases(TestCase):
     def setUp(self):
         manager = RoomManager.objects.create(username='vivek')
-        Rooms.objects.create(manager=manager, room_no=300, room_type='Deluxe', price=3000, is_available=True, no_of_days_advance=10, start_date='2020-03-20')
-        Rooms.objects.create(manager=manager, room_no=301, room_type='Super Deluxe', price=5000, is_available=True, no_of_days_advance=15, start_date='2020-03-26')
+        Rooms.objects.create(manager=manager, room_no='300', room_type='Deluxe', price=3000, is_available=True, no_of_days_advance=10, start_date='2020-03-20')
+        Rooms.objects.create(manager=manager, room_no='301', room_type='Super Deluxe', price=5000, is_available=True, no_of_days_advance=15, start_date='2020-03-26')
 
     def test_room_no(self):
-        room1 = Rooms.objects.get(room_no=300)
-        room2 = Rooms.objects.get(room_no=301)
-        self.assertEqual(room1.room_no, 300)
-        self.assertEqual(room2.room_no, 301)
+        room1 = Rooms.objects.get(room_no='300')
+        room2 = Rooms.objects.get(room_no='301')
+        self.assertEqual(room1.room_no, '300')
+        self.assertEqual(room2.room_no, '301')
 
     def test_room_type(self):
         room1 = Rooms.objects.get(room_type='Deluxe')
@@ -32,16 +32,16 @@ class BookingTestCases(TestCase):
         manager = RoomManager.objects.create(username='rahul')
         vivek = Customer.objects.create(username='vivek', pin_code=799046)
         vikas = Customer.objects.create(username='vikas', pin_code=799046)
-        room = Rooms.objects.create(manager=manager, room_no=300, no_of_days_advance=10, start_date='2020-03-09')
+        room = Rooms.objects.create(manager=manager, room_no='300', no_of_days_advance=10, start_date='2020-03-09')
 
-        Booking.objects.create(user=vivek, room_no=room, amount=10000, start_day='2020-03-10', end_day='2020-03-10')
-        Booking.objects.create(user=vikas, room_no=room, amount=5000, start_day='2020-03-26', end_day='2020-03-28')
+        Booking.objects.create(user_id=vivek, room_no=room, amount=10000, start_day='2020-03-10', end_day='2020-03-10')
+        Booking.objects.create(user_id=vikas, room_no=room, amount=5000, start_day='2020-03-26', end_day='2020-03-28')
 
     def test_booking_username(self):
-        booking1 = Booking.objects.get(user__username='vivek')
-        booking2 = Booking.objects.get(user__username='vikas')
-        self.assertEqual(booking1.user.username, 'vivek')
-        self.assertEqual(booking2.user.username, 'vikas')
+        booking1 = Booking.objects.get(user_id__username='vivek')
+        booking2 = Booking.objects.get(user_id__username='vikas')
+        self.assertEqual(booking1.user_id.username, 'vivek')
+        self.assertEqual(booking2.user_id.username, 'vikas')
 
     def test_booking_amount(self):
         booking1 = Booking.objects.get(amount=10000)
